@@ -9,23 +9,23 @@ This project uses a dataset containing results of multiple marketing campaigns f
 By building and evaluating a number of classifier models, we will attempt to identify the most important features that influence a prospect’s likelihood of subscribing to a deposit product.  This insight will help us optimize direct marketing campaigns, reducing costs while increasing conversions.
 
 ## Exploratory Data Analysis
-Per [the published paper](https://core.ac.uk/download/pdf/55616194.pdf), this dataset is mostly cleaned.  Only a dozen duplicate rows needed to be dropped.
+Per the [S. Moro, RMS Laureano et al. published paper](https://core.ac.uk/download/pdf/55616194.pdf), this dataset is mostly cleaned.  Only a dozen duplicate rows needed to be dropped.
 
-The popular [ydata-profiling](https://docs.profiling.ydata.ai/latest/) package was used to produce a [statistical report](./resources/data_profile_report.html) of the dataset.
+The popular [ydata-profiling](https://docs.profiling.ydata.ai/latest/) package was used to produce a [statistical report](https://html-preview.github.io/?url=https://github.com/dmtrinh/direct-marketing-campaigns/blob/main/resources/data_profile_report.html) of the dataset.
 
-By plotting the number of samples for each predictor variable with the target variable as the hue, we it's clear we are dealing with a highly imbalanced dataset.
+By plotting the number of samples for each predictor variable with the target variable as the hue, it's clear we are dealing with a highly imbalanced dataset.
 ![Plot of Dependent Variables with Target Hues](./resources/plot_dependent_variables_with_target_hue.png)
 
 ![Original Correlation Matrix](./resources/correlation_matrix_of_numeric_variables.png)
 
 ## Data Preparation
 
-* `job`, `marital`, `default`, `housing`, `loan`, and `poutcome` variables had `unknown` or `nonexistent` values.  From the above plot, notice that the missing values relationship with the target variable is quite different than other values.  This missingness is informative and therefore I chose not to impute the missing values.  One-hot encoding was used for these variables.
+* `job`, `marital`, `default`, `housing`, `loan`, and `poutcome` variables had `unknown` or `nonexistent` values.  From the above plot, notice that the missing values relationship with the target variable is quite different than other values.  This missingness is informative and therefore we chose not to impute the missing values.  One-hot encoding was used for these variables.
 * `education` had a natural order so ordinal encoding was used on this variable.  The value mapping is as follows:  `unknown`: 0, `basic.4y`: 1, `basic.6y`: 2, `basic.9y`: 3, `high.school`: 4, `professional.course`: 5, `university.degree`: 6
 * `contact` only had two values: `cellular` and `telephone`.  This was binary encoded into `contact_by_cell` with 1 indicating the communication type was cellular and 0 to be telephone (non-cellular).
 * Both `month` and `day_of_week` required special treatment since it's desirable to retain continuity and also avoid misleading distances between values.  For example, December of last year is only 1 month away from January of this year.  A naive ordinal encoding would have lead to a delta of 11 between these two months.  Cyclical encoding was used on these variables.[[ref]](https://towardsdatascience.com/cyclical-encoding-an-alternative-to-one-hot-encoding-for-time-series-features-4db46248ebba)
 
-Once non-numerical columns were properly encoded, I recomputed the correlation matrix.  Correlations of the new variables against the target 'y':
+Once non-numerical columns were properly encoded, we recomputed the correlation matrix.  Correlations of the new variables against the target 'y':
 ![New Correlations against Target y](./resources/new_correlation_values_to_y.png)
 
 ## Modeling
